@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# IDEs and editors
+.idea/
+.vscode/
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Node.js dependencies
+node_modules/
+
+# Build output
+dist/
+build/
