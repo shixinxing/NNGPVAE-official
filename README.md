@@ -2,7 +2,9 @@
 
 This repository contains the official PyTorch implementation for the ICML 2025 paper "Neighbour-Driven Gaussian Process Variational Autoencoders (GPVAE) for Scalable Structured Latent Modelling." *(arxiv link TBD)* Inspired by recent developments in nearest neighbour Gaussian Process (GP) (i.e., [SWS-GP](https://proceedings.mlr.press/v139/tran21a.html) and [VNN-GP](https://proceedings.mlr.press/v162/wu22h.html)), this work introduces a neighbour-driven approximation strategy that exploits local adjacencies in the latent space to achieve scalable GPVAE inference.
 
-![illustrative image here](assets/illustration.png)
+<p align="center">
+<img src="https://github.com/shixinxing/NNGPVAE-official/blob/main/assets/illustration-github.png" alt="示例图片" width="600">
+</p>
 
 ## Table of Contents
 
