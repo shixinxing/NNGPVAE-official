@@ -29,7 +29,7 @@ If you find this work helpful, please consider citing our ICML paper:
 ```
 @inproceedings{nngpvae2025,
   title = {Neighbour-Driven Gaussian Process Variational Autoencoders for Scalable Structured Latent Modelling},
-  author = {Xinxing Shi, Xiaoyu Jiang, Mauricio A. {\'A}lvarez},
+  author = {Shi, Xinxing and Jiang, Xiaoyu and {\'A}lvarez, Mauricio},
   booktitle = {Proceedings of the 42nd International Conference on Machine Learning (ICML)},
   pages = {--},
   year = {2025},
