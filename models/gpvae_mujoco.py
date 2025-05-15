@@ -81,17 +81,17 @@ class GPVAEMujocoBase(GPVAEBaseMisFrms):
                 miniseries_latent_mean, miniseries_latent_std = [], []
 
             for sq_short, t_short, t_mask_short in time_dataloader:
-                sq_short = sq_short.to(device).transpose(0, 1)  # [v, n, D]
-                t_short = t_short.to(device).transpose(0, 1).contiguous()  # [v, n, 1]
-                t_mask_short = t_mask_short.to(device).transpose(0, 1)[..., 0]  # [v,n], unobserved=0
+                sq_short = sq_short.to(device).transpose(0, 1) 
+                t_short = t_short.to(device).transpose(0, 1).contiguous() 
+                t_mask_short = t_mask_short.to(device).transpose(0, 1)[..., 0] 
 
                 # find NN in test observations
                 nn_idx = entire_test_dataset.nnutil_all.find_nn_idx_from_index_subsets(t_short, vid_ids, self.H)
-                y_nn, t_nn = test_dataset.gather(nn_idx)[:2]  # [v, n, H, D/1]
+                y_nn, t_nn = test_dataset.gather(nn_idx)[:2] 
                 y_nn, t_nn = y_nn.to(device), t_nn.to(device)
-                enc_means, enc_stds = self.encoder(y_nn)  # [v,n,H,L]
+                enc_means, enc_stds = self.encoder(y_nn) 
 
-                post_mean, post_cov = self.gp.posterior(t_short, t_nn, enc_means, enc_stds)  # [v,n,L]
+                post_mean, post_cov = self.gp.posterior(t_short, t_nn, enc_means, enc_stds) 
                 if diagnosis:
                     r_dict = predict_y(post_mean, torch.clamp(post_cov.sqrt(), max=0.05), self.decoder, sq_short, s=num_samples)
                 else:
@@ -116,10 +116,10 @@ class GPVAEMujocoBase(GPVAEBaseMisFrms):
                 all_pred_std.append(torch.cat(miniseries_pred_std, dim=-2))
 
             if diagnosis:
-                all_latent_mean.append(torch.cat(miniseries_latent_mean, dim=-2))  # along time dim
+                all_latent_mean.append(torch.cat(miniseries_latent_mean, dim=-2)) 
                 all_latent_std.append(torch.cat(miniseries_latent_std, dim=-2))
 
-        all_se, all_nll = torch.cat(all_se, dim=0), torch.cat(all_nll, dim=0)  # [V,T,D]
+        all_se, all_nll = torch.cat(all_se, dim=0), torch.cat(all_nll, dim=0) 
 
         mean_rmse, mean_nll = all_se.mean(dim=(-1, -2)).sqrt().mean(), all_nll.mean()
 
