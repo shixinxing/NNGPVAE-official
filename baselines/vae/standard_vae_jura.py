@@ -22,7 +22,7 @@ class VAEJura(VAEBase):
         data_X, masks, data_Ymiss, data_Yfull, stat = load_jura(file_path)
         data_dict = {"X": data_X, "Y": data_Ymiss, "masks": masks, "Y_full": data_Yfull}
         self.train_dataset = NNDataset(data_dict, missing=True, return_full=True, H=None)
-        self.Ystat = stat  # normalisation statistics on train data
+        self.Ystat = stat 
 
     def train_vae(self, optimizer: torch.optim.Optimizer, batch_size: int, epochs: int, beta: float=1.,
                   device='cpu', print_epochs=10,
@@ -53,11 +53,11 @@ class VAEJura(VAEBase):
 
         for y_miss_b, _, m_b, y_full_b in test_dataloader:
             y_miss_b, m_b, y_full_b = y_miss_b.to(device), m_b.to(device=device, dtype=torch.bool), y_full_b.to(device)
-            enc_means, enc_stds = self.encoder(y_miss_b)  # [b,L]
+            enc_means, enc_stds = self.encoder(y_miss_b) 
             r_dict = predict_y(enc_means, enc_stds, self.decoder, y_full_b, s=num_samples, stat=stat)
 
             all_se.append(r_dict['se'][~m_b])
-            all_ae.append(r_dict['ae'][~m_b])  # only compute metric on missing parts, [n_test]
+            all_ae.append(r_dict['ae'][~m_b]) 
             all_nll.append(r_dict['nll'][~m_b])
             all_pred_mean.append(r_dict['pred_mean'])
             all_pred_std.append(r_dict['pred_std'])
@@ -65,7 +65,7 @@ class VAEJura(VAEBase):
         all_ae = torch.cat(all_ae, dim=0)
         all_se = torch.cat(all_se, dim=0)
         all_nll = torch.cat(all_nll, dim=0)
-        all_pred_mean = torch.cat(all_pred_mean, dim=0)  # [n_test, D_y]
+        all_pred_mean = torch.cat(all_pred_mean, dim=0)
         all_pred_std = torch.cat(all_pred_std, dim=0)
 
         if not return_pred:
