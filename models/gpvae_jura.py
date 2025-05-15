@@ -41,7 +41,7 @@ class GPVAEJuraImpBase(GPVAESpatialImp):
         data_dict = {"X": data_X, "Y": data_Ymiss, "masks": masks, "Y_full": data_Yfull}
         self.train_dataset = NNDataset(data_dict, missing=True, return_full=True, H=H, search_device=search_device,
                                        build_sequential_first=build_sequential_first)
-        self.Ystat = stat  # normalisation statistics on train data
+        self.Ystat = stat 
 
 
 class GPVAEJuraImp_SWS(GPVAEJuraImpBase):
