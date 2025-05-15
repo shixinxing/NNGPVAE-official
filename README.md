@@ -15,11 +15,16 @@ This repository contains the official PyTorch implementation for the ICML 2025 p
 
 ## Baseline Implementations
 
-Below is a curated list of existing GitHub repositories that implement the baselines used for comparison in our paper:
-| Baseline Model | Repository | Notes |
-| ----- | ------| -----|
-
-
+Below is a reference list of official GitHub repositories that implement GPVAE-related models:
+| Baseline Model | Reference |
+| ----- | -----|
+| GPVAE-Casale [(code)](https://github.com/fpcasale/GPPVAE)  | Gaussian Process Prior Variational Autoencoders (NIPS 2018) [(paper)](https://arxiv.org/abs/1810.11738) |
+| GPVAE-Pearce [(code)](https://github.com/scrambledpie/GPVAE) | The Gaussian Process Prior VAE for Interpretable Latent Dynamics from Pixels (AABI 2019) [(paper)](https://proceedings.mlr.press/v118/pearce20a.html) |
+| GPVAE-Band [(code)](https://github.com/ratschlab/GP-VAE) | GP-VAE: Deep Probabilistic Time Series Imputation (AISTATS 2020) [(paper)](https://arxiv.org/abs/1907.04155) |
+| SVGPVAE [(code)](https://github.com/ratschlab/SVGP-VAE) | Scalable Gaussian Process Variational Autoencoder (AISTATS 2021) [(paper)](https://arxiv.org/abs/2010.13472) |
+| LVAE [(code)](https://github.com/SidRama/Longitudinal-VAE) | Longitudinal Variational Autoencoder (AISTATS 2021) [(paper)](https://proceedings.mlr.press/v130/ramchandran21b.html) |
+| MGPVAE [(code)](https://github.com/harrisonzhu508/MGPVAE?tab=readme-ov-file) | Markovian Gaussian Process Variational Autoencoders (ICML 2023) [(paper)](https://arxiv.org/pdf/2207.05543) |
+|SGPBAE [(code)](https://github.com/tranbahien/sgp-bae)| Fully Bayesian Autoencoders with Latent Sparse Gaussian Processes (ICML 2023) [(paper)](https://proceedings.mlr.press/v202/tran23a.html) |
 
 
 ## Citation
