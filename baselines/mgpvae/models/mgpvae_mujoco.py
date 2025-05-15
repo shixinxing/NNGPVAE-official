@@ -49,14 +49,14 @@ class MGPVAEMujoco(MGPVAEBase):
         Support missing frames
         vid_batch_miss_f: [v,T,14]; t_batch: [v,T,1]; m_batch_miss_f: [v,T]
         """
-        qnet_mus, qnet_vars = self.build_MLP_inference_graph(vid_batch_miss_f)  # [v,T,L]
-        dt_nonzero = torch.diff(t_batch, dim=-2).unsqueeze(-1).unsqueeze(-1)  # [v,T-1,1,1,1]
-        _, _, m_ss_Z, P_ss_Z, sum_log_p = self.ssm.update_posterior(dt_nonzero, qnet_mus, qnet_vars, m=m_batch_miss_f)  # [v,L,T]
-        m_ss_Z = m_ss_Z.mT  # [v,T,L]
+        qnet_mus, qnet_vars = self.build_MLP_inference_graph(vid_batch_miss_f) 
+        dt_nonzero = torch.diff(t_batch, dim=-2).unsqueeze(-1).unsqueeze(-1)
+        _, _, m_ss_Z, P_ss_Z, sum_log_p = self.ssm.update_posterior(dt_nonzero, qnet_mus, qnet_vars, m=m_batch_miss_f)
+        m_ss_Z = m_ss_Z.mT
         P_ss_Z = P_ss_Z.mT
 
         latent_samples = m_ss_Z + P_ss_Z.sqrt() * torch.randn_like(m_ss_Z)
-        rec_vid = self.decoder(latent_samples)  # [v,T,...]
+        rec_vid = self.decoder(latent_samples) 
         # rec_vid = torch.where(m_batch_miss_f.unsqueeze(-1).bool(), rec_vid, 0.)
         return qnet_mus, qnet_vars, m_ss_Z, P_ss_Z, rec_vid, sum_log_p
 
@@ -66,11 +66,11 @@ class MGPVAEMujoco(MGPVAEBase):
         if self.decoder.output_distribution == 'normal':
             sigma2_y = self.decoder.sigma2_y
             _exp_lk = - 1 / 2 * ((y_batch - y_recon).square() / sigma2_y + torch.log(2 * torch.pi * sigma2_y))
-            exp_lk = torch.where(m_batch_miss_f.unsqueeze(-1).bool(), _exp_lk, 0)  # [(v),T,14]
+            exp_lk = torch.where(m_batch_miss_f.unsqueeze(-1).bool(), _exp_lk, 0) 
         else:
             raise NotImplementedError
 
-        return exp_lk.sum()  # sum over v*T*14
+        return exp_lk.sum() 
 
     # override
     def average_loss(self, vid_batch_miss_f: Tensor, t_batch: Tensor, m_batch_miss_f: Tensor, beta=1.):
@@ -85,13 +85,13 @@ class MGPVAEMujoco(MGPVAEBase):
         exp_lk_observed = self.expected_log_prob(rec_vid, vid_batch_miss_f, m_batch_miss_f)
 
         # E3
-        E3 = sum_log_p.sum()  # sum over v
+        E3 = sum_log_p.sum() 
 
         # E1 negative cross entropy
         # m_ss_Z, P_ss_Z, qnet_mus, qnet_vars: [v,T,L]
         E1 = negative_gaussian_cross_entropy(m_ss_Z, P_ss_Z, qnet_mus, qnet_vars)
         E1 = torch.where(m_batch_miss_f.unsqueeze(-1).bool(), E1, 0.)
-        E1 = E1.sum()  # sum over v*T*L
+        E1 = E1.sum()
 
         KL = E1 - E3
 
@@ -157,9 +157,9 @@ class MGPVAEMujoco(MGPVAEBase):
             miniseries_sq_full, miniseries_t_full, miniseries_fill_t_full, miniseries_t_mask = (
                 miniseries_sq_full.to(device), miniseries_t_full.to(device),
                 miniseries_fill_t_full.to(device), miniseries_t_mask.to(device))
-            qnet_mus, qnet_vars = self.build_MLP_inference_graph(miniseries_sq_full)  # [v,T,L]
+            qnet_mus, qnet_vars = self.build_MLP_inference_graph(miniseries_sq_full)
             # latent GP prediction
-            pred_m_Zs, pred_cov_Zs = self.ssm.predict(qnet_mus, qnet_vars, miniseries_t_mask, miniseries_fill_t_full, miniseries_t_full)  # [v,L,T]
+            pred_m_Zs, pred_cov_Zs = self.ssm.predict(qnet_mus, qnet_vars, miniseries_t_mask, miniseries_fill_t_full, miniseries_t_full)
             r_dict = predict_y(pred_m_Zs.mT, pred_cov_Zs.mT.sqrt(), self.decoder, miniseries_sq_full, s=num_samples)
 
             all_se.append(r_dict["se"])
@@ -169,7 +169,7 @@ class MGPVAEMujoco(MGPVAEBase):
                 all_pred_mean.append(r_dict["pred_mean"])
                 all_pred_std.append(r_dict["pred_std"])
 
-        all_se, all_nll = torch.cat(all_se, dim=0), torch.cat(all_nll, dim=0)  # [v,T,D]
+        all_se, all_nll = torch.cat(all_se, dim=0), torch.cat(all_nll, dim=0)
         mean_rmse, mean_nll, = all_se.mean(dim=(-1, -2)).sqrt().mean(), all_nll.mean()
 
         if not return_pred:
