@@ -18,7 +18,7 @@ def predict_y(Z_ms: Tensor, Z_stds: Tensor, decoder: Union[MujocoDecoder, JuraDe
 
     eps = torch.randn(s, *Z_ms.shape, device=Z_ms.device)
     Z_samples = Z_ms + Z_stds * eps
-    recon_means = decoder(Z_samples)  # [s,v,t/T,D]
+    recon_means = decoder(Z_samples) 
 
     if stat is not None:
         assert "mean" in stat and "std" in stat
@@ -27,7 +27,7 @@ def predict_y(Z_ms: Tensor, Z_stds: Tensor, decoder: Union[MujocoDecoder, JuraDe
     else:
         sigma2_y = decoder.sigma2_y.detach()
 
-    pred_mean = recon_means.mean(axis=0)  # [v,t/T,D]  # TODO: change this
+    pred_mean = recon_means.mean(axis=0) 
     # pred_mean = decoder(Z_ms)
 
     # nll
@@ -49,7 +49,7 @@ def predict_y(Z_ms: Tensor, Z_stds: Tensor, decoder: Union[MujocoDecoder, JuraDe
     r_dict = {}  # results dictionary
     r_dict['nll'] = nll 
     r_dict['se'] = se
-    r_dict['ae'] = ae  # used for jura
+    r_dict['ae'] = ae 
     r_dict['pred_mean'] = pred_mean
     r_dict['pred_std'] = pred_std
 
