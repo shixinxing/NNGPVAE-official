@@ -45,4 +45,4 @@ class SVGPVAEJura(SVGPVAESpatialImp):
 
         super(SVGPVAEJura, self).__init__(encoder, decoder, svgp, device=device, jitter=jitter, geco=False)
 
-        self.Ystat = stat  # normalisation statistics on train data
+        self.Ystat = stat 
