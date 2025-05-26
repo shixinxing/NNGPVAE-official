@@ -1,0 +1,17 @@
+name: gp
+channels:
+  - pytorch
+  - defaults
+  - pkgs/main
+  - conda-forge
+dependencies:
+  - gpytorch=1.13
+  - h5py=3.12.1=py310h8456320_0
+  - numpy=1.26.4=py310h3b2db8e_0
+  - python=3.10.9=h3ba56d0_0_cpython
+  - pytorch=2.5.1=py3.10_0
+  - scikit-learn=1.5.1=py310h46d7db6_0
+  - scipy=1.14.1=py310hd336fd7_0
+  - faiss-cpu=1.9.0
+  - pip:
+      - mujoco==3.2.6
