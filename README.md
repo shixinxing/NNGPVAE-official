@@ -8,13 +8,16 @@ This repository contains the official PyTorch implementation for the ICML 2025 p
 
 ## Table of Contents
 - [Environment Setup](#environment-setup)
-- [Usage](#usage)
 - [Baseline Implementations](#baseline-implementations)
 - [Citation](#citation)
 
 ## Environment Setup
 
-## Usage
+The required packages are listed in `environment.yml`. Users can recreate the environment by running
+```
+conda env create -f environment.yml
+```
+Note that the provided environment contains the CPU version of [Faiss](https://github.com/facebookresearch/faiss) (i.e., `faiss-cpu`). One can consider installing the corresponding GPU version (i.e., `faiss-gpu`).
 
 ## Baseline Implementations
 
