@@ -38,13 +38,13 @@ Below is a reference list of official GitHub repositories that implement GPVAE-r
 If you find this work helpful, please consider citing our ICML paper:
 
 ```
-@inproceedings{nngpvae2025,
-  title = {Neighbour-driven {G}aussian process variational autoencoders for scalable structured latent modelling},
-  author = {Shi, Xinxing and Jiang, Xiaoyu and {\'A}lvarez, Mauricio},
-  booktitle = {Proceedings of the 42nd International Conference on Machine Learning (ICML)},
-  pages = {--},
-  year = {2025},
-  organization={PMLR}
+@inproceedings{
+shi2025neighbourdriven,
+title={Neighbour-Driven Gaussian Process Variational Autoencoders for Scalable Structured Latent Modelling},
+author={Xinxing Shi and Xiaoyu Jiang and Mauricio A {\'A}lvarez},
+booktitle={Forty-second International Conference on Machine Learning},
+year={2025},
+url={https://openreview.net/forum?id=XlRIub1r5s}
 }
 ```
 
