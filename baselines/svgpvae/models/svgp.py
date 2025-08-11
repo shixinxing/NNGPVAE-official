@@ -18,6 +18,7 @@ class SVGP(GP):
     ):
         """If N_train is None: missing-frame case, N_train depends on mini-series."""
         super(SVGP, self).__init__(output_dims, kernel, mean=ZeroMean(batch_shape=torch.Size([output_dims])))
+        # ⚠️ Whether to share inducing points across latent dims.
         # The official model doesn't share for moving ball (it sets two completely independent SVGPs)
         # but it does share for MNIST
         self.inducing_points = inducing_points  # [(L), M, D]
@@ -144,7 +145,35 @@ class SVGP(GP):
         KL_log_det = L_uu.diagonal(dim1=-1, dim2=-2).log().sum(-1) - L_Ab.diagonal(dim1=-1, dim2=-2).log().sum(-1)
         KL = 0.5 * (KL_mahalanobis - self.inducing_points.size(-2) + KL_trace_term) + KL_log_det  # [(v),L]
 
+        # test, we don't use covar as arguments since it will result in great error gap through official `kl`
+        # q = torch.distributions.MultivariateNormal(loc=mu, scale_tril=L_Ab)
+        # p = torch.distributions.MultivariateNormal(loc=torch.zeros_like(mu), scale_tril=L_uu)
+        # true_kl = torch.distributions.kl.kl_divergence(q, p).sum()
+        # print(f"true_kl: {true_kl}, my kl: {KL.sum()}")
+
         return (log_Normal + trace).sum(dim=(-1, -2)), KL.sum(-1)  # [(v)], [(v)]
 
 
+if __name__ == "__main__":
+    from gpytorch.kernels import RBFKernel
 
+    torch.manual_seed(0)
+    torch.set_default_dtype(torch.float64)
+
+    v, N, M, D, L = 3, 10, 5, 1, 2
+    ip_shared = True
+    if ip_shared:
+        ip = torch.nn.Parameter(torch.randn(M, D))
+    else:
+        ip = torch.nn.Parameter(torch.randn(L, M, D))
+    model = SVGP(output_dims=2, kernel=RBFKernel(batch_shape=torch.Size([L])), inducing_points=ip, N_train=N, jitter=0.)
+
+    b = 4
+    x_b, q_m, q_v = torch.randn(v, b, D), torch.rand(v, b, L), torch.rand(v, b, L)
+    mu_qs, cov_qs, mu_bb, A_bb = model.approx_posterior_params(x_b, q_m, q_v, x_b)
+    print(f"q(Z_U): variational distribution over inducing points:\n\t\tmean: {mu_bb.shape}, cov: {A_bb.shape}")
+    print(f"batch size: [{b}]")
+    print(f"q_s(Z): variational distribution over mini-batch:\n\t\tmean: {mu_qs.shape}, cov: {cov_qs.shape}")
+
+    res1, res2 = model.variational_loss(x_b, q_m, q_v, mu_bb, A_bb)
+    print(f"res1: {res1.shape}, res2: {res2.shape}")
