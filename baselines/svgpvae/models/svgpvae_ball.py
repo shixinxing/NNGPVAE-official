@@ -27,7 +27,7 @@ class SVGPVAEBall(SVGPVAEBase):
         kernel = RBFKernel(batch_shape=torch.Size([2]))
         kernel.lengthscale = lengthscale
         kernel.raw_lengthscale.requires_grad_(GP_joint)
-        # each latent dim has a set of inducing points
+        # ⚠️ each latent dim has a set of inducing points
         inducing_points = nn.Parameter(
             torch.linspace(0, num_frames-1, M).unsqueeze(-1).repeat(2, 1, 1), requires_grad=IP_joint  # [2,M,1]
         )
@@ -86,8 +86,9 @@ class SVGPVAEBall(SVGPVAEBase):
             t_batch = t_batch.expand(self.num_videos_per_epoch, self.num_frames_per_epoch, 1)
             vid_batch = torch.as_tensor(test_data_dict['images'], device=device, dtype=torch.get_default_dtype())
 
-            paths, _, rec_imgs = self.forward(vid_batch, t_batch, cov_latent_diag=True)  # [v,f,2], [v,f,32,32]
-            paths, rec_imgs = paths.to('cpu').numpy(), rec_imgs.to('cpu').numpy()
+            paths, _, rec_imgs = self.forward(
+                vid_batch, t_batch, cov_latent_diag=True, num_samples=1)   # [v,f,2], [v,f,32,32]
+            paths, rec_imgs = paths.to('cpu').numpy(), rec_imgs[0].to('cpu').numpy()  # rec_imgs has a sample dim
             target_paths, target_imgs = test_data_dict['paths'], test_data_dict['images']
             ro_paths, se = path_rotation(paths, target_paths)
 
@@ -175,7 +176,7 @@ if __name__ == '__main__':
     parser.add_argument('--GP_joint', action='store_true', help='whether to train the GP params')
     parser.add_argument('--IP_joint', action='store_true', help='whether to train the inducing locations')
 
-    parser.add_argument('--num_epochs', type=int, default=5, help='number of training epochs')
+    parser.add_argument('--num_epochs', type=int, default=10, help='number of training epochs')
     parser.add_argument('--num_print_epochs', type=int, default=1, help='number of printing epochs')
     parser.add_argument('--save', action='store_true', help='save everything into a folder')
 
